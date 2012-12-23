@@ -15,11 +15,32 @@ main = defaultMain tests
 
 tests = [testGroup "TXT2EPUB" [
                 -- testProperty "splitBy" prop_splitBy,
-                testCase "splitBySimple" test_splitBy
+                testCase "Split By should split by predicate" test_splitBy,
+                testCase "Split By should handle beginning bound" test_splitByBeginning,
+                testCase "Split By should handle multiple hits" test_splitByAtLeastThree,
+                testCase "Split By should handle empty split at the end" test_splitByEnd,
+
+                testCase "SplitAts should handle beginning bound" test_splitAtsBeginning,
+
+                testCase "SplitAts should handle empty split at the end" test_splitAtsEnd,
+
+                testCase "SplitAts should handle multiple splits" test_splitAtsMultiple
         ]]
 
--- need to arrange for the generated arrays never to have the boundary value...?
+-- need to arrange for the generated arrays never to have the boundary value, or for the predicate to be generic somehow...?
 -- prop_splitBy left right = splitBy (==(last left)) (concat [left, right]) == [left, right]
 --              where types = ( left :: [Int], right :: [Int] )
 
-test_splitBy = splitBy (==20) [0, 1, 2, 20, 3, 4] @?= [[0, 1, 2], [3, 4]]
+test_splitBy = splitBy (==20) [0, 1, 2, 20, 3, 4] @?= [[0, 1, 2], [20, 3, 4]]
+
+test_splitByBeginning = splitBy (==20) [20, 0, 1, 2, 20, 3, 4] @?= [[20, 0, 1, 2], [20, 3, 4]]
+
+test_splitByAtLeastThree = splitBy (==20) [0, 1, 2, 20, 3, 4, 20, 31, 32, 33, 20, 41, 42] @?= [[0, 1, 2], [20, 3, 4], [20, 31, 32, 33], [20, 41, 42]]
+
+test_splitByEnd = splitBy (==20) [0, 1, 2, 20, 3, 4, 20] @?= [[0, 1, 2], [20, 3, 4], [20]]
+
+test_splitAtsBeginning = splitAts [0] [1, 2, 3, 4] @?= [[1, 2, 3, 4]]
+
+test_splitAtsEnd = splitAts [4] [1, 2, 3, 4] @?= [[1, 2, 3, 4]]
+
+test_splitAtsMultiple = splitAts [3, 4, 8] [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] @?= [[5, 6, 7], [8], [9, 10, 11, 12], [13, 14, 15, 16]]
