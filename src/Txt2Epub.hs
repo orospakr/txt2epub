@@ -9,10 +9,8 @@ type Paragraph = String
 splitBy :: (a -> Bool) -> [a] -> [[a]]
 -- splitBy :: (String -> Bool) -> [String] -> [[String]]
 splitBy _ [] = []
-splitBy predicate list = if (null right)
-                            then [left]
-                            else ([left] ++ splitBy predicate right)
-        where (left, right) = break predicate list
+splitBy predicate list = if (null left) then (splitBy predicate $ tail remaining) else ([left] ++ splitBy predicate remaining)
+        where (left, remaining) = break predicate list
 
 isParagraphStart :: String -> Bool
 isParagraphStart line = all (==' ') potentialIndent
