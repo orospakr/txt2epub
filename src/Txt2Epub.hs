@@ -1,3 +1,5 @@
+module Txt2Epub where
+
 type Paragraph = String
 
 -- data Book = Book {
@@ -6,8 +8,11 @@ type Paragraph = String
 
 splitBy :: (a -> Bool) -> [a] -> [[a]]
 -- splitBy :: (String -> Bool) -> [String] -> [[String]]
-splitBy predicate list = left : splitBy predicate right
-        where (left, right) = span predicate list
+splitBy _ [] = []
+splitBy predicate list = if (null right)
+                            then [left]
+                            else ([left] ++ splitBy predicate right)
+        where (left, right) = break predicate list
 
 isParagraphStart :: String -> Bool
 isParagraphStart line = all (==' ') potentialIndent
@@ -27,8 +32,3 @@ readParagraphs input = mergeInner $ splitBy (isParagraphStart) $ lines input
 -- approaches:
 -- * use span with a predicate for matching indents
 -- * recurse 
-
-main :: IO()
-main = do
-     text_contents <- getContents
-     putStrLn $ join "PARAGRAPH: \n" $ readParagraphs text_contents
