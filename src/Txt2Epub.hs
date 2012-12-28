@@ -12,7 +12,7 @@ type Paragraph = T.Text
 textJoin :: T.Text -> [T.Text] -> T.Text
 textJoin _ [] = T.pack ""
 textJoin _ [x] = x
-textJoin delimiter (x:xs) = T.append x $ textJoin delimiter xs
+textJoin delimiter (x:xs) = T.append x (T.append delimiter $ textJoin delimiter xs)
 
 splitByDropDelim :: (a -> Bool) -> [a] -> [[a]]
 -- splitBy :: (String -> Bool) -> [String] -> [[String]]

@@ -54,6 +54,6 @@ test_splitAtsMultiple = splitAts [3, 4, 8] [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1
 
 test_joinEmpty = textJoin (T.pack "LOL") [] @?= T.pack ""
 
-test_joinSingle = textJoin (T.pack "LOL") [T.pack "oi", T.pack "oi"] @?= T.pack "oi"
+test_joinSingle = textJoin (T.pack "LOL") [T.pack "oi"] @?= T.pack "oi"
 
 test_joinMultiple = textJoin (T.pack "foo") [T.pack "bar", T.pack "baz"] @?= T.pack "barfoobaz"
