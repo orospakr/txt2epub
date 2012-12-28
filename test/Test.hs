@@ -8,6 +8,7 @@ import Test.QuickCheck
 import Test.HUnit
 
 import Data.List
+import qualified Data.Text as T
 
 import Txt2Epub
 
@@ -24,7 +25,13 @@ tests = [testGroup "TXT2EPUB" [
 
                 testCase "SplitAts should handle empty split at the end" test_splitAtsEnd,
 
-                testCase "SplitAts should handle multiple splits" test_splitAtsMultiple
+                testCase "SplitAts should handle multiple splits" test_splitAtsMultiple,
+
+                testCase "Join should handle empty list" test_joinEmpty,
+
+                testCase "Join should handle single item" test_joinSingle,
+
+                testCase "Join should multiple items" test_joinMultiple
         ]]
 
 -- need to arrange for the generated arrays never to have the boundary value, or for the predicate to be generic somehow...?
@@ -44,3 +51,9 @@ test_splitAtsBeginning = splitAts [0] [1, 2, 3, 4] @?= [[1, 2, 3, 4]]
 test_splitAtsEnd = splitAts [4] [1, 2, 3, 4] @?= [[1, 2, 3, 4]]
 
 test_splitAtsMultiple = splitAts [3, 4, 8] [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] @?= [[5, 6, 7], [8], [9, 10, 11, 12], [13, 14, 15, 16]]
+
+test_joinEmpty = textJoin (T.pack "LOL") [] @?= T.pack ""
+
+test_joinSingle = textJoin (T.pack "LOL") [T.pack "oi", T.pack "oi"] @?= T.pack "oi"
+
+test_joinMultiple = textJoin (T.pack "foo") [T.pack "bar", T.pack "baz"] @?= T.pack "barfoobaz"

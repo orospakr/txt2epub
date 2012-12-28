@@ -1,11 +1,18 @@
 module Txt2Epub where
 import Data.List
+import qualified Data.Text as T
 
-type Paragraph = String
+type Paragraph = T.Text
 
 -- data Book = Book {
 --      paragraphs :: [Paragraph]
 -- }
+
+-- amazingly, Data.Text lacks join
+textJoin :: T.Text -> [T.Text] -> T.Text
+textJoin _ [] = T.pack ""
+textJoin _ [x] = x
+textJoin delimiter (x:xs) = T.append x $ textJoin delimiter xs
 
 splitByDropDelim :: (a -> Bool) -> [a] -> [[a]]
 -- splitBy :: (String -> Bool) -> [String] -> [[String]]
@@ -28,17 +35,20 @@ splitAts indices list = splitAts' indices list 0
 splitBy predicate list = splitAts indices list
        where indices = findIndices predicate list
 
-isParagraphStart :: String -> Bool
-isParagraphStart line = all (==' ') potentialIndent
-                 where potentialIndent = take 4 line
+isParagraphStart :: T.Text -> Bool
+isParagraphStart line = T.all (==(' ')) potentialIndent
+                 where potentialIndent = T.take 4 line
 
 join :: String -> [String] -> String
 join delimiter (x:xs) = x ++ delimiter ++ join delimiter xs
 join _ [] = []
 
-mergeInner :: [[String]] -> [Paragraph]
-mergeInner stringList = map (\s -> join " " s) stringList
+-- Turn a list of of lists of lines, and join each list of lines into
+-- a single Paragraph.
+assembleParagraphs :: [[T.Text]] -> [Paragraph]
+assembleParagraphs stringList = map (\s -> T.unwords s) stringList
 
--- Take input, a single string, and split it into individual Paragraphs
+-- Take input, a single string, and split it into individual
+-- Paragraphs
 readParagraphs :: String -> [Paragraph]
-readParagraphs input = mergeInner $ splitBy (isParagraphStart) $ lines input
+readParagraphs input = map (\p -> T.strip p) $ assembleParagraphs $ splitBy (isParagraphStart) $ map (\s -> T.pack s) $ lines input

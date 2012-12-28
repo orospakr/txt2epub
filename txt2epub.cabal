@@ -8,13 +8,13 @@ description:
 data-dir: ""
  
 executable txt2epub
-    build-depends: QuickCheck -any, base -any
+    build-depends: QuickCheck -any, base -any, text -any
     main-is: Main.hs
     buildable: True
     hs-source-dirs: src
  
 test-suite test-txt2epub
-    build-depends: QuickCheck -any, base -any, HUnit -any, test-framework-quickcheck2 -any, test-framework -any, test-framework-hunit -any
+    build-depends: QuickCheck -any, base -any, HUnit -any, test-framework-quickcheck2 -any, test-framework -any, test-framework-hunit -any, text -any
     
     type: exitcode-stdio-1.0
     main-is: Test.hs
