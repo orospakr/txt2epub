@@ -24,4 +24,4 @@ HTML (hacked) on `stdout`.
 
 ## TODO
 
-Actual output of EPUB, more knobs for more input preformats variant.
+Actual output of EPUB, more knobs for more input preformat variants.
