@@ -4,9 +4,13 @@ import qualified Data.Text as T
 
 type Paragraph = T.Text
 
--- data Book = Book {
---      paragraphs :: [Paragraph]
--- }
+data Chapter = Chapter {
+     paragraphs :: [Paragraph]
+}
+
+data Book = Book {
+     chapters :: [Chapter]     
+}
 
 -- amazingly, Data.Text lacks join
 textJoin :: T.Text -> [T.Text] -> T.Text
@@ -47,6 +51,13 @@ join _ [] = []
 -- a single Paragraph.
 assembleParagraphs :: [[T.Text]] -> [Paragraph]
 assembleParagraphs stringList = map (\s -> T.unwords s) stringList
+
+
+-- filterBlanks :: [Paragraph] -> [Paragraph]
+-- filterBlanks paragraphs = filter (==(T.pack(
+
+-- filterOutChapters :: [Paragraphs] -> [Chapter]
+-- filterOutChapters paragraphs = splitBy 
 
 -- Take input, a single string, and split it into individual
 -- Paragraphs
